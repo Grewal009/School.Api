@@ -13,4 +13,14 @@ var app = builder.Build();
 
 app.MapGet("/students", () => students);
 
+app.MapGet("/students/{id}", (int id) =>
+{
+    var student = students.Find(s => s.Id == id);
+    if (student == null)
+    {
+        return Results.NotFound();
+    }
+    return Results.Ok(student);
+});
+
 app.Run();

@@ -1,4 +1,6 @@
+using Microsoft.AspNetCore.DataProtection.Repositories;
 using School.Api.Entities;
+using School.Api.Repositories;
 
 namespace School.Api.Endpoints;
 
@@ -10,17 +12,18 @@ public static class StudentsEndpoints
     new Student(){Id=2,Name="Peter",DateOfBirth=new DateOnly(1996,1,1),Course="Frontend Development",Address="0520 Oslo"},
     new Student(){Id=3,Name="Pål",DateOfBirth=new DateOnly(1997,8,25),Course="Web Development",Address="0506 Oslo"},
     };
-
     const string GetStudentByIdEndpoint = "GetGameById";
+
     public static RouteGroupBuilder MapStudentsEndpoints(this IEndpointRouteBuilder routes)
     {
+
         var group = routes.MapGroup("/students").WithParameterValidation();
 
-        group.MapGet("/", () => students);
+        group.MapGet("/", (IStudentRepository repository) => repository.GetALL());
 
-        group.MapGet("/{id}", (int id) =>
+        group.MapGet("/{id}", (IStudentRepository repository, int id) =>
         {
-            var student = students.Find(s => s.Id == id);
+            var student = repository.GetByID(id);
             if (student == null)
             {
                 return Results.NotFound();
@@ -28,40 +31,37 @@ public static class StudentsEndpoints
             return Results.Ok(student);
         }).WithName(GetStudentByIdEndpoint);
 
-        group.MapPost("/", (Student student) =>
+        group.MapPost("/", (IStudentRepository repository, Student student) =>
         {
-            student.Id = students.Max(s => s.Id) + 1;
-            students.Add(student);
+            repository.Create(student);
 
             return Results.CreatedAtRoute(GetStudentByIdEndpoint, new { id = student.Id }, student);
         });
 
-        group.MapPut("/{id}", (int id, Student updatedStudent) =>
+        group.MapPut("/{id}", (IStudentRepository repository, int id, Student updatedStudent) =>
         {
-            Student? student = students.Find(s => s.Id == id);
+            Student? student = repository.GetByID(id);
 
             if (student == null)
             {
                 return Results.NotFound();
             }
-            student.Name = updatedStudent.Name;
-            student.DateOfBirth = updatedStudent.DateOfBirth;
-            student.Course = updatedStudent.Course;
-            student.Address = updatedStudent.Address;
+
+            repository.Update(updatedStudent);
 
             return Results.NoContent();
 
         });
 
-        group.MapDelete("/{id}", (int id) =>
+        group.MapDelete("/{id}", (IStudentRepository repository, int id) =>
         {
-            Student? student = students.Find(s => s.Id == id);
+            Student? student = repository.GetByID(id);
             if (student == null)
             {
                 return Results.NotFound();
             }
 
-            students.Remove(student);
+            repository.Delete(id);
             return Results.NoContent();
         });
         return group;

@@ -8,7 +8,6 @@ public class Student
     [Required]
     [StringLength(50)]
     public required string Name { get; set; }
-    [Required]
     public DateOnly DateOfBirth { get; set; }
     [Required]
     [StringLength(50)]

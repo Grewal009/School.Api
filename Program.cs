@@ -12,7 +12,7 @@ const string GetStudentByIdEndpoint = "GetGameById";
 var builder = WebApplication.CreateBuilder(args);
 var app = builder.Build();
 
-var group = app.MapGroup("/students");
+var group = app.MapGroup("/students").WithParameterValidation();
 
 group.MapGet("/", () => students);
 

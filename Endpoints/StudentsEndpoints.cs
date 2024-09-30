@@ -6,12 +6,6 @@ namespace School.Api.Endpoints;
 
 public static class StudentsEndpoints
 {
-
-    static List<Student> students = new List<Student>(){
-    new Student(){Id=1,Name="Per",DateOfBirth=new DateOnly(1995,10,15),Course="Web Development",Address="0500 Oslo"},
-    new Student(){Id=2,Name="Peter",DateOfBirth=new DateOnly(1996,1,1),Course="Frontend Development",Address="0520 Oslo"},
-    new Student(){Id=3,Name="Pål",DateOfBirth=new DateOnly(1997,8,25),Course="Web Development",Address="0506 Oslo"},
-    };
     const string GetStudentByIdEndpoint = "GetGameById";
 
     public static RouteGroupBuilder MapStudentsEndpoints(this IEndpointRouteBuilder routes)
@@ -47,7 +41,12 @@ public static class StudentsEndpoints
                 return Results.NotFound();
             }
 
-            repository.Update(updatedStudent);
+            student.Name = updatedStudent.Name;
+            student.DateOfBirth = updatedStudent.DateOfBirth;
+            student.Course = updatedStudent.Course;
+            student.Address = updatedStudent.Address;
+
+            repository.Update(student);
 
             return Results.NoContent();
 

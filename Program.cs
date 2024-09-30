@@ -4,7 +4,7 @@ using School.Api.Endpoints;
 using School.Api.Repositories;
 
 var builder = WebApplication.CreateBuilder(args);
-builder.Services.AddSingleton<IStudentRepository, InMemoryStudentsRepository>();
+builder.Services.AddScoped<IStudentRepository, EntityFrameworkStudentsRepository>();
 
 var connString = builder.Configuration.GetConnectionString("SchoolContext");
 builder.Services.AddSqlServer<SchoolContext>(connString);

@@ -31,13 +31,13 @@ public static class StudentsEndpoints
             Student student = new()
             {
                 Name = studentDto.Name,
-                DateOfBirth = studentDto.DateOfBirth,
+                DateOfBirth = studentDto.Dob,
                 Course = studentDto.Course,
                 Address = studentDto.Address,
             };
             repository.Create(student);
 
-            return Results.CreatedAtRoute(GetStudentByIdEndpoint, new { id = student.Id }, student);
+            return Results.CreatedAtRoute(GetStudentByIdEndpoint, new { id = student.Id }, student.AsDto());
         });
 
         group.MapPut("/{id}", (IStudentRepository repository, int id, UpdateStudentDto updatedStudentDto) =>
@@ -50,7 +50,7 @@ public static class StudentsEndpoints
             }
 
             student.Name = updatedStudentDto.Name;
-            student.DateOfBirth = updatedStudentDto.DateOfBirth;
+            student.DateOfBirth = updatedStudentDto.Dob;
             student.Course = updatedStudentDto.Course;
             student.Address = updatedStudentDto.Address;
 

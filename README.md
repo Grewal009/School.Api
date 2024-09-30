@@ -4,4 +4,4 @@ docker run -e "ACCEPT_EULA=Y" -e "MSSQL_SA_PASSWORD=Password1." -p 1433:1433 -v 
 
 ### Stored connection string in Secrets Manager
 
-dotnet user-secrets set "ConnectionStrings:SchoolContext" "Server=localhost; Database=Student; User Id=sa; Password=Passwoord1.; TrustServerCertificate=True"
+dotnet user-secrets set "ConnectionStrings:SchoolContext" "Server=localhost; Database=Student; User Id=sa; Password=Password1.; TrustServerCertificate=True"

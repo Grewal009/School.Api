@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.DataProtection.Repositories;
+using School.Api.Dtos;
 using School.Api.Entities;
 using School.Api.Repositories;
 
@@ -13,7 +14,7 @@ public static class StudentsEndpoints
 
         var group = routes.MapGroup("/students").WithParameterValidation();
 
-        group.MapGet("/", (IStudentRepository repository) => repository.GetALL());
+        group.MapGet("/", (IStudentRepository repository) => repository.GetALL().Select(student => student.AsDto()));
 
         group.MapGet("/{id}", (IStudentRepository repository, int id) =>
         {
@@ -22,17 +23,24 @@ public static class StudentsEndpoints
             {
                 return Results.NotFound();
             }
-            return Results.Ok(student);
+            return Results.Ok(student.AsDto());
         }).WithName(GetStudentByIdEndpoint);
 
-        group.MapPost("/", (IStudentRepository repository, Student student) =>
+        group.MapPost("/", (IStudentRepository repository, CreateStudentDto studentDto) =>
         {
+            Student student = new()
+            {
+                Name = studentDto.Name,
+                DateOfBirth = studentDto.DateOfBirth,
+                Course = studentDto.Course,
+                Address = studentDto.Address,
+            };
             repository.Create(student);
 
             return Results.CreatedAtRoute(GetStudentByIdEndpoint, new { id = student.Id }, student);
         });
 
-        group.MapPut("/{id}", (IStudentRepository repository, int id, Student updatedStudent) =>
+        group.MapPut("/{id}", (IStudentRepository repository, int id, UpdateStudentDto updatedStudentDto) =>
         {
             Student? student = repository.GetByID(id);
 
@@ -41,10 +49,10 @@ public static class StudentsEndpoints
                 return Results.NotFound();
             }
 
-            student.Name = updatedStudent.Name;
-            student.DateOfBirth = updatedStudent.DateOfBirth;
-            student.Course = updatedStudent.Course;
-            student.Address = updatedStudent.Address;
+            student.Name = updatedStudentDto.Name;
+            student.DateOfBirth = updatedStudentDto.DateOfBirth;
+            student.Course = updatedStudentDto.Course;
+            student.Address = updatedStudentDto.Address;
 
             repository.Update(student);
 

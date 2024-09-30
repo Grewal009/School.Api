@@ -10,36 +10,42 @@ public class InMemoryStudentsRepository : IStudentRepository
     };
 
     //method to return all students
-    public IEnumerable<Student> GetALL()
+    public async Task<IEnumerable<Student>> GetALLAsync()
     {
-        return students;
+        return await Task.FromResult(students);
     }
 
     //method to return student by id
-    public Student? GetByID(int id)
+    public async Task<Student?> GetByIDAsync(int id)
     {
-        return students.Find(s => s.Id == id);
+        return await Task.FromResult(students.Find(s => s.Id == id));
     }
 
     //method to create a new student
-    public void Create(Student student)
+    public async Task CreateAsync(Student student)
     {
         student.Id = students.Max(s => s.Id) + 1;
         students.Add(student);
+
+        await Task.CompletedTask;
     }
 
     //method to update a student
-    public void Update(Student updatedStudent)
+    public async Task UpdateAsync(Student updatedStudent)
     {
         var index = students.FindIndex(s => s.Id == updatedStudent.Id);
         students[index] = updatedStudent;
+
+        await Task.CompletedTask;
     }
 
     //method to delete a student
-    public void Delete(int id)
+    public async Task DeleteAsync(int id)
     {
         var index = students.FindIndex((s) => s.Id == id);
         students.RemoveAt(index);
+
+        await Task.CompletedTask;
     }
 
 

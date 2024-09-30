@@ -20,31 +20,31 @@ namespace School.Api.Repositories
 
 
 
-        public IEnumerable<Student> GetALL()
+        public async Task<IEnumerable<Student>> GetALLAsync()
         {
-            return schoolContext.Students.AsNoTracking().ToList();
+            return await schoolContext.Students.AsNoTracking().ToListAsync();
         }
 
-        public Student? GetByID(int id)
+        public async Task<Student?> GetByIDAsync(int id)
         {
-            return schoolContext.Students.Find(id);
+            return await schoolContext.Students.FindAsync(id);
         }
 
-        public void Create(Student student)
+        public async Task CreateAsync(Student student)
         {
             schoolContext.Students.Add(student);
-            schoolContext.SaveChanges();
+            await schoolContext.SaveChangesAsync();
         }
 
-        public void Update(Student updatedStudent)
+        public async Task UpdateAsync(Student updatedStudent)
         {
             schoolContext.Update(updatedStudent);
-            schoolContext.SaveChanges();
+            await schoolContext.SaveChangesAsync();
         }
 
-        public void Delete(int id)
+        public async Task DeleteAsync(int id)
         {
-            schoolContext.Students.Where(s => s.Id == id).ExecuteDelete();
+            await schoolContext.Students.Where(s => s.Id == id).ExecuteDeleteAsync();
         }
     }
 }

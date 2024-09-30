@@ -14,11 +14,11 @@ public static class StudentsEndpoints
 
         var group = routes.MapGroup("/students").WithParameterValidation();
 
-        group.MapGet("/", (IStudentRepository repository) => repository.GetALL().Select(student => student.AsDto()));
+        group.MapGet("/", async (IStudentRepository repository) => (await repository.GetALLAsync()).Select(student => student.AsDto()));
 
-        group.MapGet("/{id}", (IStudentRepository repository, int id) =>
+        group.MapGet("/{id}", async (IStudentRepository repository, int id) =>
         {
-            var student = repository.GetByID(id);
+            var student = await repository.GetByIDAsync(id);
             if (student == null)
             {
                 return Results.NotFound();
@@ -26,7 +26,7 @@ public static class StudentsEndpoints
             return Results.Ok(student.AsDto());
         }).WithName(GetStudentByIdEndpoint);
 
-        group.MapPost("/", (IStudentRepository repository, CreateStudentDto studentDto) =>
+        group.MapPost("/", async (IStudentRepository repository, CreateStudentDto studentDto) =>
         {
             Student student = new()
             {
@@ -35,14 +35,14 @@ public static class StudentsEndpoints
                 Course = studentDto.Course,
                 Address = studentDto.Address,
             };
-            repository.Create(student);
+            await repository.CreateAsync(student);
 
             return Results.CreatedAtRoute(GetStudentByIdEndpoint, new { id = student.Id }, student.AsDto());
         });
 
-        group.MapPut("/{id}", (IStudentRepository repository, int id, UpdateStudentDto updatedStudentDto) =>
+        group.MapPut("/{id}", async (IStudentRepository repository, int id, UpdateStudentDto updatedStudentDto) =>
         {
-            Student? student = repository.GetByID(id);
+            Student? student = await repository.GetByIDAsync(id);
 
             if (student == null)
             {
@@ -54,21 +54,21 @@ public static class StudentsEndpoints
             student.Course = updatedStudentDto.Course;
             student.Address = updatedStudentDto.Address;
 
-            repository.Update(student);
+            await repository.UpdateAsync(student);
 
             return Results.NoContent();
 
         });
 
-        group.MapDelete("/{id}", (IStudentRepository repository, int id) =>
+        group.MapDelete("/{id}", async (IStudentRepository repository, int id) =>
         {
-            Student? student = repository.GetByID(id);
+            Student? student = await repository.GetByIDAsync(id);
             if (student == null)
             {
                 return Results.NotFound();
             }
 
-            repository.Delete(id);
+            await repository.DeleteAsync(id);
             return Results.NoContent();
         });
         return group;

@@ -11,7 +11,7 @@ builder.Services.AddSqlServer<SchoolContext>(connString);
 
 var app = builder.Build();
 
-app.Services.InitializeDb();
+await app.Services.InitializeDb();
 
 
 app.MapStudentsEndpoints();

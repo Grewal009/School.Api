@@ -4,9 +4,9 @@ namespace School.Api.Repositories;
 
 public interface IStudentRepository
 {
-    void Create(Student student);
-    void Delete(int id);
-    Student? GetByID(int id);
-    IEnumerable<Student> GetALL();
-    void Update(Student updatedStudent);
+    Task CreateAsync(Student student);
+    Task DeleteAsync(int id);
+    Task<Student?> GetByIDAsync(int id);
+    Task<IEnumerable<Student>> GetALLAsync();
+    Task UpdateAsync(Student updatedStudent);
 }

@@ -1,4 +1,5 @@
 using System.ComponentModel.DataAnnotations;
+using School.Api.Entities;
 
 namespace School.Api.Dtos;
 
@@ -7,7 +8,8 @@ public record StudentDto(
     string Name,
     DateOnly Dob,
     string Course,
-    string Address
+    string Address,
+    ICollection<Preference> Preferences
 );
 
 public record CreateStudentDto(

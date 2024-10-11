@@ -15,7 +15,8 @@ namespace School.Api.Entities
                 student.Name,
                 student.DateOfBirth,
                 student.Course,
-                student.Address
+                student.Address,
+                student.Preferences
             );
         }
     }

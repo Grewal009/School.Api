@@ -1,4 +1,6 @@
 using Microsoft.AspNetCore.DataProtection.Repositories;
+using Microsoft.EntityFrameworkCore;
+using School.Api.Data;
 using School.Api.Dtos;
 using School.Api.Entities;
 using School.Api.Repositories;
@@ -13,6 +15,13 @@ public static class StudentsEndpoints
     {
 
         var group = routes.MapGroup("/students").WithParameterValidation();
+
+        group.MapGet("/items", async (SchoolContext dbContext) =>
+        {
+            var items = await dbContext.Students.Include(i => i.Preferences).ToListAsync();
+            return Results.Ok(items);
+        });
+
 
         group.MapGet("/", async (IStudentRepository repository) => (await repository.GetALLAsync()).Select(student => student.AsDto()));
 
